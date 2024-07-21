@@ -3,6 +3,7 @@ package com.example.mileageplanner.ui
 import androidx.annotation.IntRange
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -25,11 +26,15 @@ import kotlin.math.roundToInt
 @Preview(showBackground = true)
 @Composable
 private fun MileageSliderPreview() {
-    MileageSlider(sliderMax = 10)
+    MileageSlider(
+        day = "Mon",
+        sliderMax = 10,
+    )
 }
 
 @Composable
 fun MileageSlider(
+    day: String,
     @IntRange(from = 1) sliderMax: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -40,7 +45,14 @@ fun MileageSlider(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = "$value")
+        Text(
+            text = day,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            text = "$value",
+            style = MaterialTheme.typography.bodyMedium,
+        )
         Slider(
             value = value.toFloat(),
             onValueChange = { value = it.roundToInt() },
