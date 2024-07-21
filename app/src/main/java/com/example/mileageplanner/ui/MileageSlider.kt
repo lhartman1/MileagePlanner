@@ -32,6 +32,10 @@ private fun MileageSliderPreview() {
     )
 }
 
+/**
+ * To get the Slider to be vertical, I used this resource:
+ * https://stackoverflow.com/a/71129399
+ */
 @Composable
 fun MileageSlider(
     day: String,
