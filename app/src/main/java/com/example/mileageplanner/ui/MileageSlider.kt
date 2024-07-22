@@ -8,10 +8,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,8 +24,9 @@ import kotlin.math.roundToInt
 private fun MileageSliderPreview() {
     MileageSlider(
         day = "Mon",
+        mileage = 5,
         sliderMax = 10,
-    )
+    ) {}
 }
 
 /**
@@ -39,11 +36,12 @@ private fun MileageSliderPreview() {
 @Composable
 fun MileageSlider(
     day: String,
+    mileage: Int,
     @IntRange(from = 1) sliderMax: Int,
     modifier: Modifier = Modifier,
+    onValueChanged: (Int) -> Unit,
 ) {
     val steps = sliderMax - 1
-    var value by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
         modifier = modifier,
@@ -54,12 +52,12 @@ fun MileageSlider(
             style = MaterialTheme.typography.bodyLarge,
         )
         Text(
-            text = "$value",
+            text = "$mileage",
             style = MaterialTheme.typography.bodyMedium,
         )
         Slider(
-            value = value.toFloat(),
-            onValueChange = { value = it.roundToInt() },
+            value = mileage.toFloat(),
+            onValueChange = { onValueChanged(it.roundToInt()) },
             valueRange = 0.0f..sliderMax.toFloat(),
             steps = steps,
             colors = SliderDefaults.colors().copy(
