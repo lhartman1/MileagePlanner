@@ -29,6 +29,8 @@ private fun MileageSliderPreview() {
     ) {}
 }
 
+private const val SLIDER_HEIGHT = 256
+
 /**
  * To get the Slider to be vertical, I used this resource:
  * https://stackoverflow.com/a/71129399
@@ -82,7 +84,7 @@ fun MileageSlider(
                         placeable.place(-placeable.width, 0)
                     }
                 }
-                .width(120.dp) // width is actually height because of the transformation
+                .width(SLIDER_HEIGHT.dp) // width is actually height because of the transformation
         )
     }
 }
