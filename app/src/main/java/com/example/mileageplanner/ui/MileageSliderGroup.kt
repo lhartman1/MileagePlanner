@@ -1,11 +1,10 @@
 package com.example.mileageplanner.ui
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,8 +37,10 @@ fun MileageSliderGroup(
     val totalMileage = mileageMap.value.values.fold(0) { acc, i -> acc + i }
 
     Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .border(1.dp, MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(16.dp))
+            .padding(vertical = 32.dp)
+        ,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -47,10 +48,7 @@ fun MileageSliderGroup(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 24.dp),
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
+        Row {
             mileageMap.value.forEach { (dayOfWeek, mileage) ->
                 val dayString =
                     dayOfWeek.getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
