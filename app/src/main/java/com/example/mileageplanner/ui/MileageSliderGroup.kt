@@ -20,10 +20,13 @@ import com.example.mileageplanner.utils.getMonday
 import com.example.mileageplanner.utils.getSunday
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
 private const val SLIDER_DEFAULT_MAX = 26
+
+val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
 
 @Preview(showBackground = true)
 @Composable
@@ -48,15 +51,17 @@ fun MileageSliderGroup(
             .padding(vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        val mondayStr = dayInWeek.getMonday().format(dateTimeFormatter)
+        val sundayStr = dayInWeek.getSunday().format(dateTimeFormatter)
         Text(
-            text = "${dayInWeek.getMonday()} to ${dayInWeek.getSunday()}",
-            style = MaterialTheme.typography.headlineMedium,
+            text = "$mondayStr to $sundayStr",
+            style = MaterialTheme.typography.headlineSmall,
         )
 
         Text(
             text = "Total: $totalMileage",
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
         )
 
         Row(
