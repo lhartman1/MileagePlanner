@@ -1,7 +1,7 @@
 package com.example.mileageplanner.data
 
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
+import java.time.LocalDate
 
 /**
  * Repository that provides insert, update, delete, and retrieve of [DayMileage] from a given data
@@ -17,7 +17,12 @@ interface MileageRepository {
     /**
      * Retrieve a [DayMileage] from the given data source that matches with the [date].
      */
-    fun getDayMileage(date: Date): Flow<DayMileage?>
+    fun getDayMileage(date: LocalDate): Flow<DayMileage?>
+
+    /**
+     * Retrieves a list of [DayMileage] for a week including [date]
+     */
+    fun getWeekMileage(date: LocalDate): Flow<List<DayMileage>>
 
     /**
      * Insert a [DayMileage] in the data source

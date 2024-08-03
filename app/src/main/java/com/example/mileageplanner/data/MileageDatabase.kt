@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 const val MILEAGE_DATABASE_NAME = "mileage_database"
 
 @Database(entities = [DayMileage::class], version = 1, exportSchema = false)
+@TypeConverters(DateConverter::class)
 abstract class MileageDatabase : RoomDatabase() {
 
     abstract fun dayMileageDao(): DayMileageDao

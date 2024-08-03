@@ -7,12 +7,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
+import java.time.LocalDate
 
 @Dao
 interface DayMileageDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(dayMileage: DayMileage)
 
     @Update
@@ -22,7 +22,10 @@ interface DayMileageDao {
     suspend fun delete(dayMileage: DayMileage)
 
     @Query("SELECT * from $DAY_MILEAGE_TABLE WHERE day = :date")
-    fun getDayMileage(date: Date): Flow<DayMileage>
+    fun getDayMileage(date: LocalDate): Flow<DayMileage>
+
+    @Query("SELECT * from $DAY_MILEAGE_TABLE WHERE day >= :startOfWeek AND day <= :endOfWeek")
+    fun getWeekMileage(startOfWeek: LocalDate, endOfWeek: LocalDate): Flow<List<DayMileage>>
 
     @Query("SELECT * from $DAY_MILEAGE_TABLE ORDER BY day ASC")
     fun getAllDays(): Flow<List<DayMileage>>
