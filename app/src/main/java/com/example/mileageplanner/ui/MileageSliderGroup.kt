@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,8 +22,6 @@ import com.example.mileageplanner.utils.getSunday
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
 
 private const val SLIDER_DEFAULT_MAX = 26
 
@@ -51,11 +50,15 @@ fun MileageSliderGroup(
             .padding(vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val mondayStr = dayInWeek.getMonday().format(dateTimeFormatter)
+        val monday = dayInWeek.getMonday()
+        val isCurrentWeek = monday == LocalDate.now().getMonday()
+        val mondayStr = monday.format(dateTimeFormatter)
         val sundayStr = dayInWeek.getSunday().format(dateTimeFormatter)
         Text(
             text = "$mondayStr to $sundayStr",
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = if (isCurrentWeek) MaterialTheme.colorScheme.primary else Color.Unspecified
+            ),
         )
 
         Text(
@@ -69,13 +72,7 @@ fun MileageSliderGroup(
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             mileageList.value.forEach { dayMileage ->
-                val dayString = dayMileage.day.dayOfWeek.getDisplayName(
-                    TextStyle.SHORT_STANDALONE,
-                    Locale.getDefault(),
-                )
-                val mileage = dayMileage.mileage.toInt()
-
-                MileageSlider(day = dayString, mileage = mileage, sliderMax = SLIDER_DEFAULT_MAX) {
+                MileageSlider(dayMileage = dayMileage, sliderMax = SLIDER_DEFAULT_MAX) {
                     val newDayMileage = dayMileage.copy(mileage = it.toBigDecimal())
                     viewModel.updateMileage(newDayMileage)
                 }
