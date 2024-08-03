@@ -2,6 +2,7 @@ package com.example.mileageplanner.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.mileageplanner.utils.getMonday
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -14,3 +15,22 @@ data class DayMileage(
 
     val mileage: BigDecimal,
 )
+
+fun List<DayMileage>.getNumberOfWeeks(): Long {
+    if (size <= 1) return 1
+    val firstMonday = first().day.getMonday().toEpochDay()
+    val lastMonday = last().day.getMonday().toEpochDay()
+    val numberOfWeeks = ((lastMonday - firstMonday) / 7) + 1
+    return numberOfWeeks
+}
+
+fun List<DayMileage>.getNthMonday(n: Int): LocalDate? {
+    return firstOrNull()?.day?.getMonday()?.plusWeeks(n.toLong())
+}
+
+fun List<DayMileage>.getCurrentWeekNumber(): Long {
+    val thisMonday = LocalDate.now().getMonday().toEpochDay()
+    val firstMonday = firstOrNull()?.day?.getMonday()?.toEpochDay() ?: thisMonday
+    val weekNumber = (thisMonday - firstMonday) / 7
+    return weekNumber
+}

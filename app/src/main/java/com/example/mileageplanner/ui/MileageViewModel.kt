@@ -13,7 +13,9 @@ import java.time.LocalDate
 
 class MileageViewModel(private val repository: MileageRepository) : ViewModel() {
 
-    internal fun getMileageValues(date: LocalDate = LocalDate.now()): Flow<List<DayMileage>> {
+    fun getAllMileageValues(): Flow<List<DayMileage>> = repository.getAllStream()
+
+    fun getMileageValues(date: LocalDate = LocalDate.now()): Flow<List<DayMileage>> {
         return repository.getWeekMileage(date).transform { mileageList ->
             val mutableMileageList = mileageList.toMutableList()
             val week = date.getWeek()
