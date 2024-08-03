@@ -17,14 +17,17 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import com.example.mileageplanner.data.DayMileage
+import com.example.mileageplanner.utils.getShortDisplayName
+import java.math.BigDecimal
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @Preview(showBackground = true)
 @Composable
 private fun MileageSliderPreview() {
     MileageSlider(
-        day = "Mon",
-        mileage = 5,
+        dayMileage = DayMileage(LocalDate.now(), BigDecimal.ONE),
         sliderMax = 10,
     ) {}
 }
@@ -37,12 +40,14 @@ private const val SLIDER_HEIGHT = 256
  */
 @Composable
 fun MileageSlider(
-    day: String,
-    mileage: Int,
+    dayMileage: DayMileage,
     @IntRange(from = 1) sliderMax: Int,
     modifier: Modifier = Modifier,
     onValueChanged: (Int) -> Unit,
 ) {
+    val dayString = dayMileage.day.getShortDisplayName()
+    val isToday = dayMileage.day == LocalDate.now()
+    val mileage = dayMileage.mileage.toInt()
     val steps = sliderMax - 1
 
     Column(
@@ -50,8 +55,10 @@ fun MileageSlider(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = day,
-            style = MaterialTheme.typography.bodyLarge,
+            text = dayString,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = if (isToday) MaterialTheme.colorScheme.primary else Color.Unspecified
+            ),
         )
         Text(
             text = "$mileage",

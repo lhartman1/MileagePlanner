@@ -1,37 +1,36 @@
 package com.example.mileageplanner.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.mileageplanner.data.PreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import java.time.DayOfWeek
+import androidx.lifecycle.viewModelScope
+import com.example.mileageplanner.data.DayMileage
+import com.example.mileageplanner.data.MileageRepository
+import com.example.mileageplanner.utils.getWeek
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.time.LocalDate
 
-class MileageViewModel(private val preferencesRepository: PreferencesRepository) : ViewModel() {
+class MileageViewModel(private val repository: MileageRepository) : ViewModel() {
 
-    private val _mileageValues = MutableStateFlow(getMileageValues())
-    val mileageValues = _mileageValues.asStateFlow()
+    fun getAllMileageValues(): Flow<List<DayMileage>> = repository.getAllStream()
 
-    private fun getMileageValues(): Map<DayOfWeek, Int> =
-        DayOfWeek.entries.associateWith { preferencesRepository.getInt(it.name, 0) }
-
-    fun updateMileage(dayOfWeek: DayOfWeek, mileage: Int) {
-        val newMap: Map<DayOfWeek, Int> = _mileageValues.value.toMutableMap().apply {
-            set(dayOfWeek, mileage)
+    fun getMileageValues(date: LocalDate = LocalDate.now()): Flow<List<DayMileage>> {
+        return repository.getWeekMileage(date).transform { mileageList ->
+            val mutableMileageList = mileageList.toMutableList()
+            val week = date.getWeek()
+            for (day in week) {
+                if (mutableMileageList.none { it.day == day }) {
+                    mutableMileageList.add(day.dayOfWeek.ordinal, DayMileage(day, BigDecimal.ZERO))
+                }
+            }
+            emit(mutableMileageList)
         }
-        _mileageValues.value = newMap
-        preferencesRepository.putInt(dayOfWeek.name, mileage)
     }
-}
 
-class MileageViewModelFactory(private val preferencesRepository: PreferencesRepository) :
-    ViewModelProvider.NewInstanceFactory() {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MileageViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MileageViewModel(preferencesRepository) as T
+    fun updateMileage(dayMileage: DayMileage) {
+        viewModelScope.launch {
+            repository.insertDayMileage(dayMileage)
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

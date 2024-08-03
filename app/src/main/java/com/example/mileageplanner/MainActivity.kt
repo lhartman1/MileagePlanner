@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.mileageplanner.ui.MileageSliderGroup
+import com.example.mileageplanner.ui.MileageSliderPager
 import com.example.mileageplanner.ui.theme.MileagePlannerTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MileagePlannerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MileageSliderGroup(modifier = Modifier.padding(innerPadding))
+                    MileageSliderPager(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
