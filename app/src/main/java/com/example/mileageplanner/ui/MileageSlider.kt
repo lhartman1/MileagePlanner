@@ -34,6 +34,8 @@ private fun MileageSliderPreview() {
 
 private const val SLIDER_HEIGHT = 256
 
+private const val ROTATE_270 = 270f
+
 /**
  * To get the Slider to be vertical, I used this resource:
  * https://stackoverflow.com/a/71129399
@@ -75,7 +77,7 @@ fun MileageSlider(
             ),
             modifier = Modifier
                 .graphicsLayer {
-                    rotationZ = 270f
+                    rotationZ = ROTATE_270
                     transformOrigin = TransformOrigin(0f, 0f)
                 }
                 .layout { measurable, constraints ->

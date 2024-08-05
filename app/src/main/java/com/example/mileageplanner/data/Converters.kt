@@ -21,7 +21,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun intFromMileage(mileage: BigDecimal?): Int?{
+    fun intFromMileage(mileage: BigDecimal?): Int? {
         return mileage?.let { (it * BigDecimal.TEN).toInt() }
     }
 }
