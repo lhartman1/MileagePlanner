@@ -13,8 +13,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.annotation.AnnotationTarget.CLASS
 
-class MileageViewModelImpl(private val repository: MileageRepository) : ViewModel(),
-    MileageViewModel {
+class MileageViewModelImpl(private val repository: MileageRepository) :
+    ViewModel(), MileageViewModel {
 
     override fun getAllMileageValues(): Flow<List<DayMileage>> = repository.getAllStream()
 
@@ -44,7 +44,7 @@ class MileageViewModelPreviewImpl : MileageViewModel {
 
     override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> = flowOf(MileageViewModel.INITIAL)
 
-    override fun updateMileage(dayMileage: DayMileage) {}
+    override fun updateMileage(dayMileage: DayMileage) { /* no-op */ }
 }
 
 interface MileageViewModel {
