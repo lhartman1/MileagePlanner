@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,8 +16,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mileageplanner.R
 import com.example.mileageplanner.utils.getMonday
 import com.example.mileageplanner.utils.getSunday
 import java.math.BigDecimal
@@ -62,11 +66,36 @@ fun MileageSliderGroup(
             ),
         )
 
-        Text(
-            text = "Total: $totalMileage",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-        )
+        Row(
+            modifier = Modifier
+                .padding(top = 16.dp, bottom = 24.dp)
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            IconButton(
+                onClick = { /*TODO*/ },
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_content_copy_24),
+                    contentDescription = "Copy week",
+                )
+            }
+            Text(
+                text = "Total: $totalMileage",
+                style = MaterialTheme.typography.headlineMedium,
+            )
+            IconButton(
+                onClick = { /*TODO*/ },
+                enabled = false,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_content_paste_24),
+                    contentDescription = "Pastes copied week",
+                )
+            }
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
