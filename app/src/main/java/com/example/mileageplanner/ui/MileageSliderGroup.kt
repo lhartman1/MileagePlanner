@@ -10,9 +10,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +27,7 @@ import com.example.mileageplanner.data.DayMileage
 import com.example.mileageplanner.utils.getMonday
 import com.example.mileageplanner.utils.getSunday
 import com.example.mileageplanner.utils.getWeek
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -95,6 +99,8 @@ private fun TotalMileageAndCopyPasteRow(
     val totalMileage = mileageList.fold(BigDecimal.ZERO) { acc, dayMileage ->
         acc + dayMileage.mileage
     }.toPlainString()
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
 
     Row(
         modifier = modifier
@@ -105,7 +111,12 @@ private fun TotalMileageAndCopyPasteRow(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         IconButton(
-            onClick = { viewModel.copyWeek(mileageList) },
+            onClick = {
+                viewModel.copyWeek(mileageList)
+                scope.launch {
+                    showCopySnackbar(snackbarHostState)
+                }
+            },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_content_copy_24),
@@ -117,13 +128,46 @@ private fun TotalMileageAndCopyPasteRow(
             style = MaterialTheme.typography.headlineMedium,
         )
         IconButton(
-            onClick = { viewModel.pasteWeek(dayInWeek.getWeek()) },
+            onClick = {
+                viewModel.pasteWeek(dayInWeek.getWeek())
+                scope.launch {
+                    showPasteSnackbar(dayInWeek, mileageList, viewModel, snackbarHostState)
+                }
+            },
             enabled = viewModel.copiedWeekStateFlow.collectAsState().value.isNotEmpty(),
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_content_paste_24),
                 contentDescription = "Pastes copied week",
             )
+        }
+    }
+}
+
+private suspend fun showCopySnackbar(snackbarHostState: SnackbarHostState) {
+    snackbarHostState.currentSnackbarData?.dismiss()
+    snackbarHostState.showSnackbar("Week copied!")
+}
+
+private suspend fun showPasteSnackbar(
+    dayInWeek: LocalDate,
+    mileageList: List<DayMileage>,
+    viewModel: MileageViewModel,
+    snackbarHostState: SnackbarHostState,
+) {
+    snackbarHostState.currentSnackbarData?.dismiss()
+    snackbarHostState.showSnackbar(
+        message = "Week pasted!",
+        actionLabel = "Undo",
+        withDismissAction = true,
+    ).also { result ->
+        when (result) {
+            SnackbarResult.ActionPerformed -> {
+                viewModel.copyWeek(mileageList)
+                viewModel.pasteWeek(dayInWeek.getWeek())
+                viewModel.clearCopiedWeek()
+            }
+            SnackbarResult.Dismissed -> Unit
         }
     }
 }
