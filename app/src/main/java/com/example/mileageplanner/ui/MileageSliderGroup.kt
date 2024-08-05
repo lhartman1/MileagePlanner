@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mileageplanner.R
+import com.example.mileageplanner.data.DayMileage
 import com.example.mileageplanner.utils.getMonday
 import com.example.mileageplanner.utils.getSunday
 import com.example.mileageplanner.utils.getWeek
@@ -46,9 +47,6 @@ fun MileageSliderGroup(
 ) {
     val mileageList = viewModel.getMileageValues(dayInWeek)
         .collectAsState(initial = emptyList()).value
-    val totalMileage = mileageList.fold(BigDecimal.ZERO) { acc, dayMileage ->
-        acc + dayMileage.mileage
-    }.toPlainString()
 
     Column(
         modifier = modifier
@@ -67,36 +65,11 @@ fun MileageSliderGroup(
             ),
         )
 
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp, bottom = 24.dp)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            IconButton(
-                onClick = { viewModel.copyWeek(mileageList) },
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_content_copy_24),
-                    contentDescription = "Copy week",
-                )
-            }
-            Text(
-                text = "Total: $totalMileage",
-                style = MaterialTheme.typography.headlineMedium,
-            )
-            IconButton(
-                onClick = { viewModel.pasteWeek(dayInWeek.getWeek()) },
-                enabled = viewModel.copiedWeekStateFlow.collectAsState().value.isNotEmpty(),
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_content_paste_24),
-                    contentDescription = "Pastes copied week",
-                )
-            }
-        }
+        TotalMileageAndCopyPasteRow(
+            dayInWeek = dayInWeek,
+            mileageList = mileageList,
+            viewModel = viewModel,
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -108,6 +81,49 @@ fun MileageSliderGroup(
                     viewModel.updateMileage(newDayMileage)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TotalMileageAndCopyPasteRow(
+    dayInWeek: LocalDate,
+    mileageList: List<DayMileage>,
+    viewModel: MileageViewModel,
+    modifier: Modifier = Modifier,
+) {
+    val totalMileage = mileageList.fold(BigDecimal.ZERO) { acc, dayMileage ->
+        acc + dayMileage.mileage
+    }.toPlainString()
+
+    Row(
+        modifier = modifier
+            .padding(top = 16.dp, bottom = 24.dp)
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        IconButton(
+            onClick = { viewModel.copyWeek(mileageList) },
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_content_copy_24),
+                contentDescription = "Copy week",
+            )
+        }
+        Text(
+            text = "Total: $totalMileage",
+            style = MaterialTheme.typography.headlineMedium,
+        )
+        IconButton(
+            onClick = { viewModel.pasteWeek(dayInWeek.getWeek()) },
+            enabled = viewModel.copiedWeekStateFlow.collectAsState().value.isNotEmpty(),
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_content_paste_24),
+                contentDescription = "Pastes copied week",
+            )
         }
     }
 }

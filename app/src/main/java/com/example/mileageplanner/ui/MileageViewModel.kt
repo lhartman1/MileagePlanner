@@ -27,6 +27,7 @@ class MileageViewModelImpl(private val repository: MileageRepository) :
         _copiedWeekMutableStateFlow.value = week
     }
 
+    @Suppress("SpreadOperator")
     override fun pasteWeek(week: List<LocalDate>) {
         val newWeek = week.map { day ->
             val newMileage = copiedWeekStateFlow.value
@@ -63,9 +64,9 @@ class MileageViewModelPreviewImpl : MileageViewModel {
     override val copiedWeekStateFlow: StateFlow<List<DayMileage>> =
         MutableStateFlow(emptyList<DayMileage>()).asStateFlow()
 
-    override fun copyWeek(week: List<DayMileage>) {}
+    override fun copyWeek(week: List<DayMileage>) { /* no-op */ }
 
-    override fun pasteWeek(week: List<LocalDate>) {}
+    override fun pasteWeek(week: List<LocalDate>) { /* no-op */ }
 
     override fun getAllMileageValues(): Flow<List<DayMileage>> = flowOf(MileageViewModel.INITIAL)
 
