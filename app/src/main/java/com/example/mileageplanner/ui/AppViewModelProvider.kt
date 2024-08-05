@@ -8,9 +8,9 @@ import com.example.mileageplanner.MileagePlannerApplication
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-        // Initializer for MileageViewModel
+        // Initializer for MileageViewModelImpl
         initializer {
-            MileageViewModel(
+            MileageViewModelImpl(
                 mileagePlannerApplication().container.mileageRepository,
             )
         }

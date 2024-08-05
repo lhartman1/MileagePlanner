@@ -8,9 +8,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.lifecycle.viewModelScope
 import com.example.mileageplanner.data.DayMileage
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -23,13 +23,16 @@ fun NewWeekButton(
     paginatedMonday: LocalDate,
     pagerState: PagerState,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Box {
         IconButton(
             onClick = {
                 viewModel.updateMileage(
                     DayMileage(paginatedMonday, BigDecimal.ZERO)
                 )
-                viewModel.viewModelScope.launch { pagerState.scrollToPage(1) }
+                coroutineScope.launch {
+                    pagerState.scrollToPage(1)
+                }
             },
             modifier = Modifier.scale(2f),
         ) {

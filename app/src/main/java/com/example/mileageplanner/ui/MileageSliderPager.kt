@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mileageplanner.data.getCurrentWeekNumber
 import com.example.mileageplanner.data.getNthMonday
 import com.example.mileageplanner.data.getNumberOfWeeks
@@ -23,14 +22,22 @@ import com.example.mileageplanner.utils.getMonday
 import java.time.LocalDate
 import kotlin.math.absoluteValue
 
+@OptIn(PreviewOnly::class)
 @Preview(showBackground = true)
+@Composable
+private fun MileageSliderPagerPreview() {
+    MileageSliderPager(viewModel = MileageViewModelPreviewImpl())
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MileageSliderPager(
+    viewModel: MileageViewModel,
     modifier: Modifier = Modifier,
-    viewModel: MileageViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val allMileage = viewModel.getAllMileageValues().collectAsState(initial = null).value ?: return
+    val allMileage = viewModel.getAllMileageValues()
+        .collectAsState(initial = MileageViewModel.INITIAL).value
+
     val pagerState = rememberPagerState(
         // Adding 2 to page count to make an empty week at the beginning and end of the pager
         pageCount = { allMileage.getNumberOfWeeks().toInt() + 2 },
@@ -68,7 +75,7 @@ fun MileageSliderPager(
                 ?: LocalDate.now().getMonday().plusWeeks((page - 1).toLong())
             when {
                 page == 0 -> NewWeekButton(viewModel, paginatedMonday, pagerState)
-                else -> MileageSliderGroup(dayInWeek = paginatedMonday)
+                else -> MileageSliderGroup(paginatedMonday, viewModel)
             }
         }
     }
