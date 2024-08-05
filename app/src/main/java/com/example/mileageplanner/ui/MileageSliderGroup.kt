@@ -165,6 +165,7 @@ private suspend fun showPasteSnackbar(
             SnackbarResult.ActionPerformed -> {
                 viewModel.copyWeek(mileageList)
                 viewModel.pasteWeek(dayInWeek.getWeek())
+                viewModel.clearCopiedWeek()
             }
             SnackbarResult.Dismissed -> Unit
         }

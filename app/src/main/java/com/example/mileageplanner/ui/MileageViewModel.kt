@@ -37,6 +37,10 @@ class MileageViewModelImpl(private val repository: MileageRepository) :
         updateMileage(*newWeek.toTypedArray())
     }
 
+    override fun clearCopiedWeek() {
+        _copiedWeekMutableStateFlow.value = emptyList()
+    }
+
     override fun getAllMileageValues(): Flow<List<DayMileage>> = repository.getAllStream()
 
     override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> {
@@ -64,22 +68,18 @@ class MileageViewModelPreviewImpl : MileageViewModel {
     override val copiedWeekStateFlow: StateFlow<List<DayMileage>> =
         MutableStateFlow(emptyList<DayMileage>()).asStateFlow()
 
-    override fun copyWeek(week: List<DayMileage>) {
-        // no-op
-    }
+    override fun copyWeek(week: List<DayMileage>) = Unit
 
-    override fun pasteWeek(week: List<LocalDate>) {
-        // no-op
-    }
+    override fun pasteWeek(week: List<LocalDate>) = Unit
+
+    override fun clearCopiedWeek() = Unit
 
     override fun getAllMileageValues(): Flow<List<DayMileage>> = flowOf(MileageViewModel.INITIAL)
 
     override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> =
         flowOf(MileageViewModel.INITIAL)
 
-    override fun updateMileage(vararg dayMileage: DayMileage) {
-        // no-op
-    }
+    override fun updateMileage(vararg dayMileage: DayMileage) = Unit
 }
 
 interface MileageViewModel {
@@ -89,6 +89,8 @@ interface MileageViewModel {
     fun copyWeek(week: List<DayMileage>)
 
     fun pasteWeek(week: List<LocalDate>)
+
+    fun clearCopiedWeek()
 
     fun getAllMileageValues(): Flow<List<DayMileage>>
 
