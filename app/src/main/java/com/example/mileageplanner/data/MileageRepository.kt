@@ -27,7 +27,7 @@ interface MileageRepository {
     /**
      * Insert a [DayMileage] in the data source
      */
-    suspend fun insertDayMileage(dayMileage: DayMileage)
+    suspend fun insertDayMileage(vararg dayMileage: DayMileage)
 
     /**
      * Update a [DayMileage] in the data source

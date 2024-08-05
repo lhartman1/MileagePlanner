@@ -31,9 +31,9 @@ class MileageViewModelImpl(private val repository: MileageRepository) : ViewMode
         }
     }
 
-    override fun updateMileage(dayMileage: DayMileage) {
+    override fun updateMileage(vararg dayMileage: DayMileage) {
         viewModelScope.launch {
-            repository.insertDayMileage(dayMileage)
+            repository.insertDayMileage(*dayMileage)
         }
     }
 }
@@ -42,9 +42,10 @@ class MileageViewModelImpl(private val repository: MileageRepository) : ViewMode
 class MileageViewModelPreviewImpl : MileageViewModel {
     override fun getAllMileageValues(): Flow<List<DayMileage>> = flowOf(MileageViewModel.INITIAL)
 
-    override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> = flowOf(MileageViewModel.INITIAL)
+    override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> =
+        flowOf(MileageViewModel.INITIAL)
 
-    override fun updateMileage(dayMileage: DayMileage) {}
+    override fun updateMileage(vararg dayMileage: DayMileage) {}
 }
 
 interface MileageViewModel {
@@ -57,7 +58,7 @@ interface MileageViewModel {
 
     fun getMileageValues(date: LocalDate): Flow<List<DayMileage>>
 
-    fun updateMileage(dayMileage: DayMileage)
+    fun updateMileage(vararg dayMileage: DayMileage)
 }
 
 @RequiresOptIn(message = "This is to be used in Compose functions that are for Preview only.")
