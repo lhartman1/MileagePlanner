@@ -39,8 +39,9 @@ fun MileageSliderGroup(
     viewModel: MileageViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val mileageList = viewModel.getMileageValues(dayInWeek).collectAsState(initial = emptyList())
-    val totalMileage = mileageList.value.fold(BigDecimal.ZERO) { acc, dayMileage ->
+    val mileageList = viewModel.getMileageValues(dayInWeek)
+        .collectAsState(initial = emptyList()).value
+    val totalMileage = mileageList.fold(BigDecimal.ZERO) { acc, dayMileage ->
         acc + dayMileage.mileage
     }.toPlainString()
 
@@ -71,7 +72,7 @@ fun MileageSliderGroup(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            mileageList.value.forEach { dayMileage ->
+            mileageList.forEach { dayMileage ->
                 MileageSlider(dayMileage = dayMileage, sliderMax = SLIDER_DEFAULT_MAX) {
                     val newDayMileage = dayMileage.copy(mileage = it.toBigDecimal())
                     viewModel.updateMileage(newDayMileage)
