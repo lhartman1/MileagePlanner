@@ -16,8 +16,8 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.annotation.AnnotationTarget.CLASS
 
-class MileageViewModelImpl(private val repository: MileageRepository) : ViewModel(),
-    MileageViewModel {
+class MileageViewModelImpl(private val repository: MileageRepository) :
+    ViewModel(), MileageViewModel {
 
     private val _copiedWeekMutableStateFlow = MutableStateFlow(emptyList<DayMileage>())
     override val copiedWeekStateFlow: StateFlow<List<DayMileage>> =
@@ -72,7 +72,7 @@ class MileageViewModelPreviewImpl : MileageViewModel {
     override fun getMileageValues(date: LocalDate): Flow<List<DayMileage>> =
         flowOf(MileageViewModel.INITIAL)
 
-    override fun updateMileage(vararg dayMileage: DayMileage) {}
+    override fun updateMileage(vararg dayMileage: DayMileage) { /* no-op */ }
 }
 
 interface MileageViewModel {
