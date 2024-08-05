@@ -17,7 +17,7 @@ class OfflineMileageRepository(private val dayMileageDao: DayMileageDao) : Milea
         )
     }
 
-    override suspend fun insertDayMileage(dayMileage: DayMileage) = dayMileageDao.insert(dayMileage)
+    override suspend fun insertDayMileage(vararg dayMileage: DayMileage) = dayMileageDao.insert(*dayMileage)
 
     override suspend fun updateDayMileage(dayMileage: DayMileage) = dayMileageDao.update(dayMileage)
 

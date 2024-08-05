@@ -13,7 +13,7 @@ import java.time.LocalDate
 interface DayMileageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(dayMileage: DayMileage)
+    suspend fun insert(vararg dayMileage: DayMileage)
 
     @Update
     suspend fun update(dayMileage: DayMileage)
