@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mileageplanner.R
 import com.example.mileageplanner.utils.getMonday
 import com.example.mileageplanner.utils.getSunday
+import com.example.mileageplanner.utils.getWeek
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -75,7 +76,7 @@ fun MileageSliderGroup(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.copyWeek(mileageList) },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_content_copy_24),
@@ -87,8 +88,8 @@ fun MileageSliderGroup(
                 style = MaterialTheme.typography.headlineMedium,
             )
             IconButton(
-                onClick = { /*TODO*/ },
-                enabled = false,
+                onClick = { viewModel.pasteWeek(dayInWeek.getWeek()) },
+                enabled = viewModel.copiedWeekStateFlow.collectAsState().value.isNotEmpty(),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_content_paste_24),
