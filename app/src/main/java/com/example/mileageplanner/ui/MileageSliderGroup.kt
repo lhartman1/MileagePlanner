@@ -40,7 +40,9 @@ val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d")
 @Preview(showBackground = true)
 @Composable
 private fun MileageSliderGroupPreview() {
-    MileageSliderGroup(LocalDate.now(), MileageViewModelPreviewImpl())
+    ComposeLocalWrapper {
+        MileageSliderGroup(LocalDate.now(), MileageViewModelPreviewImpl())
+    }
 }
 
 @Composable

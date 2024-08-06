@@ -4,19 +4,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mileageplanner.ui.theme.MileagePlannerTheme
-
-val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
-    error("No Snackbar Host State")
-}
 
 @OptIn(PreviewOnly::class)
 @Preview
@@ -34,16 +26,10 @@ fun MainComposable(
         factory = AppViewModelProvider.Factory
     ),
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    CompositionLocalProvider(
-        values = arrayOf(
-            LocalSnackbarHostState provides snackBarHostState
-        )
-    ) {
+    ComposeLocalWrapper {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            snackbarHost = { SnackbarHost(snackBarHostState) },
+            snackbarHost = { SnackbarHost(LocalSnackbarHostState.current) },
         ) { innerPadding ->
             MileageSliderPager(
                 viewModel = viewModel,

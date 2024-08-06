@@ -26,7 +26,9 @@ import kotlin.math.absoluteValue
 @Preview(showBackground = true)
 @Composable
 private fun MileageSliderPagerPreview() {
-    MileageSliderPager(viewModel = MileageViewModelPreviewImpl())
+    ComposeLocalWrapper {
+        MileageSliderPager(viewModel = MileageViewModelPreviewImpl())
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
