@@ -9,6 +9,13 @@ plugins {
 
 detekt {
     config.setFrom("${project.rootDir}/config/detekt-config.yml")
+
+    // Without this, androidTest would be ignored
+    source.setFrom(
+        "src/main/java",
+        "src/test/java",
+        "src/androidTest/java",
+    )
 }
 
 android {
