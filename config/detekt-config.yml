@@ -307,13 +307,6 @@ exceptions:
       - 'RuntimeException'
       - 'Throwable'
 
-# This is for KtLint
-# https://detekt.dev/docs/rules/formatting/#filename
-# https://pinterest.github.io/ktlint/0.50.0/rules/standard/#file-name
-formatting:
-  Filename:
-    active: false
-
 naming:
   active: true
   BooleanPropertyNaming:

@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.gitlab.arturbosch.detekt)
+}
+
+detekt {
+    config.setFrom("${project.rootDir}/config/detekt-config.yml")
 }
 
 android {
