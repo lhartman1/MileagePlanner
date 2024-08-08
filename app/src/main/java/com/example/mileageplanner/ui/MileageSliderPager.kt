@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import com.example.mileageplanner.data.DayMileage
 import com.example.mileageplanner.data.getCurrentWeekNumber
 import com.example.mileageplanner.data.getNthMonday
 import com.example.mileageplanner.data.getNumberOfWeeks
@@ -27,18 +28,27 @@ import kotlin.math.absoluteValue
 @Composable
 private fun MileageSliderPagerPreview() {
     ComposeLocalWrapper {
-        MileageSliderPager(viewModel = MileageViewModelPreviewImpl())
+        MileageSliderPager(
+            viewModel = MileageViewModelPreviewImpl(),
+            initialState = MileageViewModel.INITIAL,
+        )
     }
 }
 
+/**
+ * @param initialState should be null so that function can be returned early and the pagerState is
+ * not created until the first value is emitted from the flow. It is added as a param to allow the
+ * Compose Preview to work.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MileageSliderPager(
     viewModel: MileageViewModel,
     modifier: Modifier = Modifier,
+    initialState: List<DayMileage>? = null,
 ) {
-    val allMileage = viewModel.getAllMileageValues()
-        .collectAsState(initial = MileageViewModel.INITIAL).value
+    val allMileage = viewModel.getAllMileageValues().collectAsState(initial = initialState).value
+        ?: return
 
     val pagerState = rememberPagerState(
         // Adding 2 to page count to make an empty week at the beginning and end of the pager
