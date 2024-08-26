@@ -19,11 +19,11 @@ detekt {
 }
 
 android {
-    namespace = "com.example.mileageplanner"
+    namespace = "net.lhartman.mileageplanner"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.mileageplanner"
+        applicationId = "net.lhartman.mileageplanner"
         minSdk = 29
         targetSdk = 34
         versionCode = 4
